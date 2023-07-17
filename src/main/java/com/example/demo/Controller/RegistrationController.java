@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @RestController
@@ -22,11 +23,29 @@ import java.util.List;
             return userService.getRegisterUser();
         }
 
-        @PostMapping
+        @PostMapping("/register")
 
         public User registerUser(@RequestBody User user) {
 
             return userService.registerUser(user);
         }
+    @GetMapping("login/{username}/{password}")
+    public int UserLogin(@PathVariable("username") String username1, @PathVariable ("password") String password1) {
+
+        int flag = userService.loginValidation(username1, password1);
+        if (flag == 0) {
+            return 0;
+
+        }
+        return flag;
+    }
+    /*@GetMapping("/register")
+
+    public List<User> getRegisterUser() {
+
+        return userService.registerUser();
+    }*/
+
+
     }
 
