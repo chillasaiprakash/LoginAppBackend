@@ -2,7 +2,6 @@ package com.example.demo.Service;
 
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.dao.User;
-import com.example.demo.dbutil.DBUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,25 +32,9 @@ public class UserService {
 
         return userRepository.save(user);
     }
-    public void userService() throws SQLException{
-        connection = DBUtil.getConnection();
+    public User login(String username, String password) {
+        return userRepository.findByUsernameAndPassword(username, password);
+
     }
-    public int loginValidation(String username,String password){
-        try {
-            PreparedStatement statement=connection.prepareStatement("SELECT  * FROM USER WHERE username='"+username+"'");
-            ResultSet rs=statement.executeQuery();
-            while(rs.next()){
-                    if(rs.getString(8).equals(username)&& rs.getString(7).equals(password))
-                    {
-                        flag=1;
-                    }
-                    else {
-                        System.out.println("Invalid user name /password");
-                    }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return flag;
-    }
+
 }

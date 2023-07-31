@@ -1,18 +1,18 @@
 package com.example.demo.Controller;
 import com.example.demo.Service.UserService;
 import com.example.demo.dao.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.PreparedStatement;
 import java.util.List;
 
 @RestController
 @RequestMapping("/user")
 @CrossOrigin("http://localhost:4200/")
     public class RegistrationController {
+    Logger logger= LoggerFactory.getLogger(RegistrationController.class);
         @Autowired
         UserService userService;
 
@@ -29,16 +29,23 @@ import java.util.List;
 
             return userService.registerUser(user);
         }
-    @GetMapping("login/{username}/{password}")
-    public int UserLogin(@PathVariable("username") String username1, @PathVariable ("password") String password1) {
 
-        int flag = userService.loginValidation(username1, password1);
-        if (flag == 0) {
-            return 0;
-
+    @PostMapping("/login")
+    public User login(@RequestBody User user ) throws Exception{
+       String tempUser=user.getUsername();
+       String tempPassword=user.getPassword();
+       User userObj=null;
+        if(tempUser!=null&& tempPassword!=null) {
+            userObj = userService.login(tempUser, tempPassword);
         }
-        return flag;
+        if(userObj==null) {
+            logger.info("Bad credentials");
+        }
+        return userObj;
     }
+
+
+
     /*@GetMapping("/register")
 
     public List<User> getRegisterUser() {
